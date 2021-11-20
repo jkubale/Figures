@@ -1,0 +1,119 @@
+---
+title: "Simple seasonality plot"
+author: "John Kubale"
+date: "11/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=T,results='hide', message=FALSE, warning=FALSE}
+library(rvest)
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+library(scico)
+# library(tidyquant)
+```
+
+# Scrape RSV surveillance data from CDC 
+
+```{r, echo=T,message=FALSE, warning=FALSE}
+url <- "https://www.cdc.gov/surveillance/nrevss/images/trend_images/RSV14Num_Nat.htm"
+
+rsvdata <- url%>%
+  read_html()%>%
+  html_nodes(xpath = "/html/body/table")%>%
+  html_table()%>%
+  .[[1]]
+
+head(rsvdata)
+
+rsvdata <- rsvdata%>%
+  rename(week = "")%>%
+  mutate(Antigen = as.numeric(`Antigen Detections`),
+         PCR = as.numeric(`PCR Detections`),
+         wk_date = as_date(RepWeekDate, 
+                           format = guess_formats(RepWeekDate, "mdy")[1]))%>%
+  select(week, wk_date, Antigen, PCR)
+
+
+```
+\
+
+# Make simple bar chart of RSV PCR detections over time
+```{r}
+ggplot(rsvdata)+
+  geom_bar(aes(x = wk_date, y = PCR), stat = "identity", fill = "navy")+
+  scale_x_date(date_labels="%b-%Y", date_breaks="2 months")+
+  labs(y = "Number of Detections per Week", x = "", title = "US RSV Detections by PCR")+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+```
+\
+
+# Include data on the number of antigen tests as well
+First we need to transform the data to "long form" (i.e. 2 rows per week -- 
+one with the number of PCR detections and the other with the number of antigen 
+detections).
+\
+```{r, echo=F, include=F,message=FALSE, warning=FALSE}
+
+rsvdata_long <- rsvdata%>%
+  pivot_longer(-c(week, wk_date), names_to = "test_type", values_to = "count")
+
+```
+\
+
+## Stacked 
+```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+ggplot(rsvdata_long)+
+  geom_bar(aes(x = wk_date, y = count, fill = test_type), stat = "identity", )+
+  scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
+  labs(y = "Number of Detections per Week", x = "", title = "US RSV Detections by Test Type")+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        legend.title = element_blank())
+```
+\
+## Change the fill colors of the plot.
+\
+```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+ggplot(rsvdata_long)+
+  geom_bar(aes(x = wk_date, y = count, fill = test_type), stat = "identity", )+
+  scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
+  labs(y = "Number of Detections per Week", x = "", title = "US RSV Detections by Test Type")+
+  scale_fill_scico_d(palette = 'vik')+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        legend.title = element_blank())
+
+
+```
+\
+
+## Stacked 
+```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+ggplot(rsvdata_long)+
+  geom_bar(aes(x = wk_date, y = count, fill = test_type), position = "dodge", stat = "identity", )+
+  scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
+  tidyquant::coord_x_date(xlim = c("2020-01-01", "2021-01-01"))+
+  labs(y = "Number of Detections per Week", x = "", title = "US RSV Detections by Test Type")+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        legend.title = element_blank())
+```
+\
+## Change the fill colors of the plot.
+\
+```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+ggplot(rsvdata_long)+
+  geom_bar(aes(x = wk_date, y = count, fill = test_type), position = "dodge", stat = "identity", )+
+  scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
+  labs(y = "Number of Detections per Week", x = "", title = "US RSV Detections by Test Type")+
+  scale_fill_scico_d(palette = 'vik')+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        legend.title = element_blank())
+```
+
+
