@@ -5,18 +5,20 @@ date: "11/20/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ```{r ,echo=T,results='hide', message=FALSE, warning=FALSE}
+library(here)
 library(rvest)
 library(dplyr)
 library(lubridate)
 library(tidyr)
 library(ggplot2)
 library(scico)
-# library(tidyquant)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 # Scrape RSV surveillance data from CDC 
@@ -78,7 +80,9 @@ ggplot(rsvdata_long)+
         legend.title = element_blank())
 ```
 \
-## Change the fill colors of the plot.
+
+### Change the fill colors of the plot.
+
 \
 ```{r, echo=F, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
@@ -104,7 +108,9 @@ ggplot(rsvdata_long)+
         legend.title = element_blank())
 ```
 \
-## Change the fill colors of the plot.
+
+### Change the fill colors of the plot.
+
 \
 ```{r, echo=F, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
