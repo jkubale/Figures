@@ -71,7 +71,7 @@ rsvdata_long <- rsvdata%>%
 \
 
 ## Stacked 
-```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+```{r, echo=T, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
   geom_bar(aes(x = wk_date, y = count, fill = test_type), stat = "identity", )+
   scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
@@ -84,7 +84,7 @@ ggplot(rsvdata_long)+
 ### Change the fill colors of the plot.
 
 \
-```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+```{r, echo=T, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
   geom_bar(aes(x = wk_date, y = count, fill = test_type), stat = "identity", )+
   scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
@@ -98,7 +98,7 @@ ggplot(rsvdata_long)+
 \
 
 ## Stacked 
-```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+```{r, echo=T, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
   geom_bar(aes(x = wk_date, y = count, fill = test_type), position = "dodge", stat = "identity", )+
   scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
@@ -112,7 +112,7 @@ ggplot(rsvdata_long)+
 ### Change the fill colors of the plot.
 
 \
-```{r, echo=F, include=T, message=FALSE, warning=FALSE}
+```{r, echo=T, include=T, message=FALSE, warning=FALSE}
 ggplot(rsvdata_long)+
   geom_bar(aes(x = wk_date, y = count, fill = test_type), position = "dodge", stat = "identity", )+
   scale_x_date(date_labels="%b-%Y", date_breaks="2 months", expand=c(0,0))+
