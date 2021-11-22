@@ -2,7 +2,7 @@
 title: "Simple seasonality plot"
 author: "John Kubale"
 date: "11/20/2021"
-output: html_document
+output: md_document
 ---
 
 
